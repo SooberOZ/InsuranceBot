@@ -108,11 +108,11 @@ namespace InsuranceBot.Services
                     };
 
                     var confirm = await _openAI.SendMessageAndGetResponse(
-                        $"Сформуй українською ввічливе повідомлення з проханням підтвердити дані:" +
+                        $"Сформуй українською ввічливе повідомлення з проханням підтвердити дані(де перераховуєш дані, які я вказав і все):" +
                         $"\nІм'я: {data.Name}" +
                         $"\nПрізвище: {data.LastName}" +
                         $"\nНомер посвідчення водія: {data.DriverLicenceId}"+
-                        $"\nVIN: {data.Vin}. Після цього пункту нічого більше не пиши");
+                        $"\nVIN: {data.Vin}.");
 
                     await bot.SendMessage(
                         chatId,

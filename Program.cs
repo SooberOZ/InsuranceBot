@@ -1,22 +1,27 @@
-﻿using InsuranceBot.Interfaces;
+﻿using dotenv.net;
+using InsuranceBot.Interfaces;
 using InsuranceBot.Services;
 using Mindee;
 using Telegram.Bot;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
+DotEnv.Load(options: new DotEnvOptions(envFilePaths: new[] { "Keys.env" }));
+
+string botToken = Environment.GetEnvironmentVariable("TELEGRAM_BOT_TOKEN")!;
+string openAiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY")!;
+string mindeeKey = Environment.GetEnvironmentVariable("MINDEE_API_KEY")!;
+string mindeeEndpoint = Environment.GetEnvironmentVariable("MINDEE_ENDPOINT")!;
 
 // Configure TelegramBotClient as Singleton
 builder.Services.AddSingleton<ITelegramBotClient>(provider =>
 {
-    var token = config["Telegram:BotToken"];
-    return new TelegramBotClient(token);
+    return new TelegramBotClient(botToken);
 });
 
 builder.Services.AddSingleton<MindeeClient>(provider =>
 {
-    var apiKey = config["Mindee:ApiKey"];
-    return new MindeeClient(apiKey);
+    return new MindeeClient(mindeeKey);
 });
 
 builder.Services.AddHttpClient<IMindeeService, MindeeService>();
@@ -26,7 +31,7 @@ builder.Services.AddScoped<IMindeeService, MindeeService>();
 builder.Services.AddSingleton<IOpenAIService>(provider =>
 {
     var config = provider.GetRequiredService<IConfiguration>();
-    var apiKey = config["OpenAI:ApiKey"];
+    var apiKey = openAiKey;
     var httpClient = provider.GetRequiredService<IHttpClientFactory>().CreateClient();
     return new OpenAIService(apiKey, httpClient);
 });
