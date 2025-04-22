@@ -1,0 +1,6 @@
+@InsuranceBot_HostAddress = http://localhost:5073
+
+GET {{InsuranceBot_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
